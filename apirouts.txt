@@ -1,0 +1,141 @@
+CookMate API routes
+Base URL: http://localhost:3000
+Routes marked [AUTH] need the header: Authorization: Bearer <token>
+
+
+HEALTH
+GET    /health                      // check the server is running
+
+
+AUTH
+POST   /api/auth/signup             // create an account          body: { "name": "Jane", "email": "jane@example.com", "password": "password123" }
+POST   /api/auth/login              // log in, returns a token    body: { "email": "jane@example.com", "password": "password123" }
+GET    /api/auth/me                 // get the logged-in user     [AUTH]
+
+
+RECIPES
+GET    /api/recipes                 // list all my recipes        [AUTH]
+GET    /api/recipes/latest          // my newest recipe           [AUTH]
+GET    /api/recipes/find?id=ID      // one recipe by id           [AUTH]
+POST   /api/recipes/ingredients     // AI ingredients for a meal  [AUTH]  body: { "mealName": "Jollof rice" }
+POST   /api/recipes/generate        // AI recipe, saved           [AUTH]  body: { "mealName": "Jollof rice", "availableIngredients": ["rice", "tomato"], "excludeCommonAllergens": false, "quickMealOnly": true }
+POST   /api/recipes/suggest         // AI meal ideas              [AUTH]  body: { "availableIngredients": ["chicken", "rice"] }
+
+
+ALLERGENS
+GET    /api/allergens               // list my allergen foods     [AUTH]
+POST   /api/allergens               // add several foods          [AUTH]  body: { "allergens": ["peanut", "shrimp"] }
+POST   /api/allergens/foods         // add one food               [AUTH]  body: { "name": "milk" }
+DELETE /api/allergens/FOOD_ID       // remove a food from my list [AUTH]
+
+
+=====================================================================
+EXAMPLE RESPONSES FOR GET ROUTES (dummy data)
+=====================================================================
+
+GET /health
+{ "status": "ok" }
+
+
+GET /api/auth/me
+{
+  "user": {
+    "id": "cmh1a2b3c0000user01",
+    "name": "Jane Doe",
+    "email": "jane@example.com"
+  }
+}
+
+
+GET /api/recipes
+// all my recipes, newest first
+{
+  "recipes": [
+    {
+      "id": "cmh1r4c1p0000rec001",
+      "title": "Smoky Jollof Rice",
+      "description": "A rich, tomato-based West African rice dish.",
+      "cuisine": "Nigerian",
+      "servings": 4,
+      "cookTimeMinutes": 45,
+      "difficulty": "MEDIUM",
+      "imageUrl": "https://images.unsplash.com/photo-123456",
+      "imageCredit": "John Smith",
+      "imageCreditUrl": "https://unsplash.com/@johnsmith",
+      "createdAt": "2026-11-10T14:32:00.000Z",
+      "updatedAt": "2026-11-10T14:32:00.000Z",
+      "createdById": "cmh1a2b3c0000user01",
+      "ingredients": [
+        { "id": "cmh1ing0001", "name": "rice", "quantity": 2, "unit": "cups", "recipeId": "cmh1r4c1p0000rec001" },
+        { "id": "cmh1ing0002", "name": "tomato", "quantity": 4, "unit": null, "recipeId": "cmh1r4c1p0000rec001" },
+        { "id": "cmh1ing0003", "name": "scotch bonnet", "quantity": 1, "unit": null, "recipeId": "cmh1r4c1p0000rec001" }
+      ],
+      "steps": [
+        { "id": "cmh1stp0001", "order": 1, "instruction": "Blend the tomatoes and pepper.", "recipeId": "cmh1r4c1p0000rec001" },
+        { "id": "cmh1stp0002", "order": 2, "instruction": "Fry the blend in oil for 15 minutes.", "recipeId": "cmh1r4c1p0000rec001" },
+        { "id": "cmh1stp0003", "order": 3, "instruction": "Add washed rice and stock, cover and cook for 25 minutes.", "recipeId": "cmh1r4c1p0000rec001" }
+      ],
+      "shoppingLists": [
+        {
+          "id": "cmh1shp0001",
+          "userId": "cmh1a2b3c0000user01",
+          "recipeId": "cmh1r4c1p0000rec001",
+          "createdAt": "2026-11-10T14:32:00.000Z",
+          "updatedAt": "2026-11-10T14:32:00.000Z",
+          "items": [
+            {
+              "id": "cmh1itm0001",
+              "name": "scotch bonnet",
+              "quantity": 1,
+              "unit": null,
+              "purchased": false,
+              "createdAt": "2026-11-10T14:32:00.000Z",
+              "shoppingListId": "cmh1shp0001"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+// shoppingLists is [] when no ingredients were missing.
+// description, unit and the image fields can be null.
+
+
+GET /api/recipes/latest
+GET /api/recipes/find?id=ID
+// one recipe, same fields as above, under "recipe" instead of "recipes"
+{
+  "recipe": {
+    "id": "cmh1r4c1p0000rec001",
+    "title": "Smoky Jollof Rice",
+    "description": "A rich, tomato-based West African rice dish.",
+    "cuisine": "Nigerian",
+    "servings": 4,
+    "cookTimeMinutes": 45,
+    "difficulty": "MEDIUM",
+    "imageUrl": "https://images.unsplash.com/photo-123456",
+    "imageCredit": "John Smith",
+    "imageCreditUrl": "https://unsplash.com/@johnsmith",
+    "createdAt": "2026-11-10T14:32:00.000Z",
+    "updatedAt": "2026-11-10T14:32:00.000Z",
+    "createdById": "cmh1a2b3c0000user01",
+    "ingredients": [ ... ],
+    "steps": [ ... ],
+    "shoppingLists": [ ... ]
+  }
+}
+// 404 /latest -> { "error": "no recipes found" }
+// 404 /find   -> { "error": "recipe not found" }
+
+
+GET /api/allergens
+// sorted A-Z
+{
+  "foods": [
+    { "id": "cmh1fd0001", "name": "milk", "createdAt": "2026-11-09T10:00:00.000Z", "updatedAt": "2026-11-09T10:00:00.000Z" },
+    { "id": "cmh1fd0002", "name": "peanut", "createdAt": "2026-11-09T10:00:00.000Z", "updatedAt": "2026-11-09T10:00:00.000Z" },
+    { "id": "cmh1fd0003", "name": "shrimp", "createdAt": "2026-11-09T10:00:00.000Z", "updatedAt": "2026-11-09T10:00:00.000Z" }
+  ]
+}
+// no allergen list yet -> { "foods": [] }

@@ -29,6 +29,67 @@ export const listRecipesHandler = async (req: Request, res: Response, next: Next
   }
 };
 
+export const getLatestRecipeHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await prisma.user.findUnique({ where: { id: req.userId }, select: { id: true } });
+    if (!user) {
+      return res.status(404).json({ error: "user does not exist" });
+    }
+    const userId = user.id;
+
+    const recipe = await prisma.recipe.findFirst({
+      where: { createdById: userId },
+      orderBy: { createdAt: "desc" },
+      include: {
+        ingredients: true,
+        steps: { orderBy: { order: "asc" } },
+        shoppingLists: { include: { items: true } },
+      },
+    });
+
+    if (!recipe) {
+      return res.status(404).json({ error: "no recipes found" });
+    }
+
+    return res.status(200).json({ recipe });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const getRecipeByIdHandler = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.query;
+
+  if (typeof id !== "string" || id.trim().length === 0) {
+    return res.status(400).json({ error: "id is required" });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({ where: { id: req.userId }, select: { id: true } });
+    if (!user) {
+      return res.status(404).json({ error: "user does not exist" });
+    }
+    const userId = user.id;
+
+    const recipe = await prisma.recipe.findFirst({
+      where: { id, createdById: userId },
+      include: {
+        ingredients: true,
+        steps: { orderBy: { order: "asc" } },
+        shoppingLists: { include: { items: true } },
+      },
+    });
+
+    if (!recipe) {
+      return res.status(404).json({ error: "recipe not found" });
+    }
+
+    return res.status(200).json({ recipe });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 export const generateRecipeHandler = async (req: Request, res: Response, next: NextFunction) => {
   const { mealName, availableIngredients = [], excludeCommonAllergens, quickMealOnly } = req.body;
 

@@ -52,6 +52,31 @@ export const addAllergensHandler = async (req: Request, res: Response, next: Nex
   }
 };
 
+// Adds a single food (by name) to the user's allergen list, creating the list
+// and the food if they don't exist yet. Adding a food already on the list is a no-op.
+export const addAllergenFoodHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await prisma.user.findUnique({ where: { id: req.userId } });
+    if (!user) {
+      return res.status(404).json({ error: "user does not exist" });
+    }
+
+    const userId = user.id as string;
+    const name = normalize(req.body.name);
+    const foods = { connectOrCreate: { where: { name }, create: { name } } };
+
+    const allergen = await prisma.allergen.upsert({
+      where: { userId },
+      update: { foods },
+      create: { userId, foods },
+      include: allergenFoods,
+    });
+    return res.status(201).json({ allergens: allergen.foods });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 export const removeAllergenHandler = async (req: Request, res: Response, next: NextFunction) => {
     const user = await prisma.user.findUnique({where: { id: req.userId}})
     if (!user){

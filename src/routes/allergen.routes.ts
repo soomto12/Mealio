@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body, validationResult } from "express-validator";
-import { addAllergensHandler, listAllergensHandler, removeAllergenHandler } from "../controllers/allergen";
+import { addAllergenFoodHandler, addAllergensHandler, listAllergensHandler, removeAllergenHandler } from "../controllers/allergen";
 import { requireAuth } from "../middleware/auth";
 
 const router = Router();
@@ -34,8 +34,20 @@ const addAllergensValidation = [
     .withMessage("each allergen name must be at most 100 characters"),
 ];
 
+const addAllergenFoodValidation = [
+  body("name")
+    .isString()
+    .withMessage("name must be a string")
+    .trim()
+    .notEmpty()
+    .withMessage("name must be non-empty")
+    .isLength({ max: 100 })
+    .withMessage("name must be at most 100 characters"),
+];
+
 router.get("/", requireAuth, listAllergensHandler);
 router.post("/", requireAuth, addAllergensValidation, validateRequest, addAllergensHandler);
+router.post("/foods", requireAuth, addAllergenFoodValidation, validateRequest, addAllergenFoodHandler);
 router.delete("/:foodId", requireAuth, removeAllergenHandler);
 
 export default router;

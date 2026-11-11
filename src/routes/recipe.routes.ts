@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body, validationResult } from "express-validator";
-import { generateIngredientsHandler, generateRecipeHandler, listRecipesHandler, suggestMealsHandler } from "../controllers/recipe";
+import { generateIngredientsHandler, generateRecipeHandler, getLatestRecipeHandler, getRecipeByIdHandler, listRecipesHandler, suggestMealsHandler } from "../controllers/recipe";
 import { requireAuth } from "../middleware/auth";
 
 const router = Router();
@@ -64,6 +64,8 @@ const generateIngredientsValidation = [
 ];
 
 router.get("/", requireAuth, listRecipesHandler);
+router.get("/latest", requireAuth, getLatestRecipeHandler);
+router.get("/find", requireAuth, getRecipeByIdHandler);
 router.post("/ingredients", requireAuth, generateIngredientsValidation, validateRequest, generateIngredientsHandler);
 router.post("/generate", requireAuth, generateRecipeValidation, validateRequest, generateRecipeHandler);
 router.post("/suggest", requireAuth, suggestMealsValidation, validateRequest, suggestMealsHandler);
