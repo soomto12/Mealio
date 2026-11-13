@@ -53,6 +53,17 @@ Write a complete recipe for "${mealName}". List every ingredient the recipe actu
 
 Each ingredient must appear in the list exactly once. Never repeat the same ingredient, even with a different quantity, unit or wording (e.g. do not list both "tomato" and "tomatoes"). If an ingredient is used in several steps, combine the total into a single entry.
 
+Be very specific about the ingredients:
+- Name each ingredient precisely, including its type or cut and how it should be prepared (e.g. "boneless chicken thighs, cut into 2 cm cubes", "red onion, finely diced", "long-grain parboiled rice, rinsed"), not vague names like "meat", "spices" or "oil".
+- Give an exact quantity and unit for every ingredient wherever possible (e.g. 2 tablespoons, 500 g, 1 cup). Use null only for "to taste" items like salt.
+
+Make the steps tell the user exactly when and how to use each ingredient:
+- Every step must name the specific ingredient(s) added or used in that step and the exact amount (e.g. "Add 2 tablespoons of vegetable oil to the pot", not "Add the oil").
+- If an ingredient is split across several steps, say how much is used in each step (e.g. "Add half (1 teaspoon) of the curry powder now; the rest goes in at step 6").
+- Say when to add each ingredient and why the timing matters, with clear cues for when to move on: heat level, time, and what the food should look, smell or feel like (e.g. "Fry the onions over medium heat for 4-5 minutes until soft and golden, then add the garlic").
+- Include preparation steps (washing, chopping, marinating, soaking, preheating) at the point they should be done, before the ingredient is needed.
+- Every ingredient in the ingredients list must be used in at least one step, and no step may use an ingredient that is not in the list.
+
 Also estimate the total cook time in minutes, and rate the recipe's difficulty as "EASY", "MEDIUM", or "HARD".
 
 Respond with ONLY a single JSON object, no other text, in exactly this shape:
