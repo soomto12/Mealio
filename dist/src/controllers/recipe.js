@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.suggestMealsHandler = exports.generateIngredientsHandler = exports.generateRecipeHandler = exports.listRecipesHandler = void 0;
+exports.suggestMealsHandler = exports.generateIngredientsHandler = exports.generateRecipeHandler = exports.getRecipeByIdHandler = exports.getLatestRecipeHandler = exports.listRecipesHandler = void 0;
 const prisma_1 = require("./lib/prisma");
 const recipeGeneration_1 = require("../services/recipeGeneration");
 const unsplash_1 = require("../services/unsplash");
@@ -28,6 +28,61 @@ const listRecipesHandler = async (req, res, next) => {
     }
 };
 exports.listRecipesHandler = listRecipesHandler;
+const getLatestRecipeHandler = async (req, res, next) => {
+    try {
+        const user = await prisma_1.prisma.user.findUnique({ where: { id: req.userId }, select: { id: true } });
+        if (!user) {
+            return res.status(404).json({ error: "user does not exist" });
+        }
+        const userId = user.id;
+        const recipe = await prisma_1.prisma.recipe.findFirst({
+            where: { createdById: userId },
+            orderBy: { createdAt: "desc" },
+            include: {
+                ingredients: true,
+                steps: { orderBy: { order: "asc" } },
+                shoppingLists: { include: { items: true } },
+            },
+        });
+        if (!recipe) {
+            return res.status(404).json({ error: "no recipes found" });
+        }
+        return res.status(200).json({ recipe });
+    }
+    catch (err) {
+        return next(err);
+    }
+};
+exports.getLatestRecipeHandler = getLatestRecipeHandler;
+const getRecipeByIdHandler = async (req, res, next) => {
+    const { id } = req.query;
+    if (typeof id !== "string" || id.trim().length === 0) {
+        return res.status(400).json({ error: "id is required" });
+    }
+    try {
+        const user = await prisma_1.prisma.user.findUnique({ where: { id: req.userId }, select: { id: true } });
+        if (!user) {
+            return res.status(404).json({ error: "user does not exist" });
+        }
+        const userId = user.id;
+        const recipe = await prisma_1.prisma.recipe.findFirst({
+            where: { id, createdById: userId },
+            include: {
+                ingredients: true,
+                steps: { orderBy: { order: "asc" } },
+                shoppingLists: { include: { items: true } },
+            },
+        });
+        if (!recipe) {
+            return res.status(404).json({ error: "recipe not found" });
+        }
+        return res.status(200).json({ recipe });
+    }
+    catch (err) {
+        return next(err);
+    }
+};
+exports.getRecipeByIdHandler = getRecipeByIdHandler;
 const generateRecipeHandler = async (req, res, next) => {
     const { mealName, availableIngredients = [], excludeCommonAllergens, quickMealOnly } = req.body;
     try {

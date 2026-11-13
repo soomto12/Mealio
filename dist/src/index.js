@@ -11,8 +11,14 @@ const recipe_routes_1 = __importDefault(require("./routes/recipe.routes"));
 const allergen_routes_1 = __importDefault(require("./routes/allergen.routes"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
+// Comma-separated list of allowed frontend origins, e.g.
+// CORS_ORIGIN=https://cookmate.app,https://www.cookmate.app
+const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173")
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean);
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
 }));
 app.use(express_1.default.json());

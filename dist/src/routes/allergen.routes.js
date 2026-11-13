@@ -30,8 +30,19 @@ const addAllergensValidation = [
         .isLength({ max: 100 })
         .withMessage("each allergen name must be at most 100 characters"),
 ];
+const addAllergenFoodValidation = [
+    (0, express_validator_1.body)("name")
+        .isString()
+        .withMessage("name must be a string")
+        .trim()
+        .notEmpty()
+        .withMessage("name must be non-empty")
+        .isLength({ max: 100 })
+        .withMessage("name must be at most 100 characters"),
+];
 router.get("/", auth_1.requireAuth, allergen_1.listAllergensHandler);
 router.post("/", auth_1.requireAuth, addAllergensValidation, validateRequest, allergen_1.addAllergensHandler);
+router.post("/foods", auth_1.requireAuth, addAllergenFoodValidation, validateRequest, allergen_1.addAllergenFoodHandler);
 router.delete("/:foodId", auth_1.requireAuth, allergen_1.removeAllergenHandler);
 exports.default = router;
 //# sourceMappingURL=allergen.routes.js.map

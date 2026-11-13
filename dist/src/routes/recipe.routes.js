@@ -58,6 +58,8 @@ const generateIngredientsValidation = [
         .withMessage("mealName must be between 2 and 200 characters"),
 ];
 router.get("/", auth_1.requireAuth, recipe_1.listRecipesHandler);
+router.get("/latest", auth_1.requireAuth, recipe_1.getLatestRecipeHandler);
+router.get("/find", auth_1.requireAuth, recipe_1.getRecipeByIdHandler);
 router.post("/ingredients", auth_1.requireAuth, generateIngredientsValidation, validateRequest, recipe_1.generateIngredientsHandler);
 router.post("/generate", auth_1.requireAuth, generateRecipeValidation, validateRequest, recipe_1.generateRecipeHandler);
 router.post("/suggest", auth_1.requireAuth, suggestMealsValidation, validateRequest, recipe_1.suggestMealsHandler);
