@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import "../types/express";
 import { prisma } from "./lib/prisma";
 
 

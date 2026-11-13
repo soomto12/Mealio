@@ -50,3 +50,5 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 app.listen(PORT, () => {
   console.log(`Mealio API listening on port ${PORT}`);
 });
+
+export default app;

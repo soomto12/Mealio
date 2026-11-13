@@ -43,4 +43,5 @@ app.use((err, _req, res, _next) => {
 app.listen(PORT, () => {
     console.log(`Mealio API listening on port ${PORT}`);
 });
+exports.default = app;
 //# sourceMappingURL=index.js.map

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.suggestMealsHandler = exports.generateIngredientsHandler = exports.generateRecipeHandler = exports.getRecipeByIdHandler = exports.getLatestRecipeHandler = exports.listRecipesHandler = void 0;
+require("../types/express");
 const prisma_1 = require("./lib/prisma");
 const recipeGeneration_1 = require("../services/recipeGeneration");
 const unsplash_1 = require("../services/unsplash");

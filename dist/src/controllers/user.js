@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = exports.me = exports.signUp = void 0;
+require("../types/express");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const prisma_1 = require("./lib/prisma");
 const jwt_1 = require("./lib/jwt");

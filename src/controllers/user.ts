@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import "../types/express";
 import bcrypt from "bcryptjs";
 import { prisma } from "./lib/prisma";
 import { signToken } from "./lib/jwt";

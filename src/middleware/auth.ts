@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import "../types/express";
 import { verifyToken } from "../controllers/lib/jwt";
 import { prisma } from "../controllers/lib/prisma";
 

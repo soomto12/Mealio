@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.requireAuth = void 0;
+require("../types/express");
 const jwt_1 = require("../controllers/lib/jwt");
 const prisma_1 = require("../controllers/lib/prisma");
 const requireAuth = async (req, res, next) => {

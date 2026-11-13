@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import "../types/express";
 import { prisma } from "./lib/prisma";
 import { generateIngredients, generateRecipe, suggestMeals } from "../services/recipeGeneration";
 import { findRecipeImage } from "../services/unsplash";

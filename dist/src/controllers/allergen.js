@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeAllergenHandler = exports.addAllergenFoodHandler = exports.addAllergensHandler = exports.listAllergensHandler = void 0;
+require("../types/express");
 const prisma_1 = require("./lib/prisma");
 const normalize = (name) => name.trim().toLowerCase();
 const allergenFoods = { foods: { orderBy: { name: "asc" } } };

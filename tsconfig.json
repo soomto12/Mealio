@@ -14,6 +14,5 @@
     "sourceMap": true
   },
   "include": ["src", "generated", "src/services"],
-  "files": ["src/types/express/index.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
