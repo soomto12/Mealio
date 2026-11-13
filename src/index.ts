@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 
 // Comma-separated list of allowed frontend origins, e.g.
 // CORS_ORIGIN=https://cookmate.app,https://www.cookmate.app
-const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173")
+const allowedOrigins = (process.env.CORS_ORIGIN || "https://mealio-ui.vercel.app,http://localhost:5173")
   .split(",")
   .map((o) => o.trim())
   .filter(Boolean);

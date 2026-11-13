@@ -1,5 +1,5 @@
 CookMate API routes
-Base URL: http://localhost:3000
+Base URL: https://mealio-swart.vercel.app (local: http://localhost:3000)
 Routes marked [AUTH] need the header: Authorization: Bearer <token>
 
 

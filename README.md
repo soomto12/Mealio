@@ -56,7 +56,7 @@ Mealio is a REST API that turns whatever ingredients you have on hand into a ful
    npm run dev
    ```
 
-The API will be available at `http://localhost:3000`.
+The API will be available at `http://localhost:3000`. Production: `https://mealio-swart.vercel.app`.
 
 ## Scripts
 
