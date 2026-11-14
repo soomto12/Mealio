@@ -20,7 +20,10 @@ interface UnsplashPhoto {
 // is never blocked by the image lookup.
 export const findRecipeImage = async (query: string): Promise<RecipeImage | null> => {
   const accessKey = process.env.UNSPLASH_ACCESS_KEY;
-  if (!accessKey) return null;
+  if (!accessKey) {
+    console.warn("[unsplash] UNSPLASH_ACCESS_KEY is not set; skipping image lookup");
+    return null;
+  }
 
   try {
     const params = new URLSearchParams({
@@ -34,7 +37,13 @@ export const findRecipeImage = async (query: string): Promise<RecipeImage | null
       headers: { Authorization: `Client-ID ${accessKey}`, "Accept-Version": "v1" },
     });
 
-    if (!response.ok) return null;
+    if (!response.ok) {
+      console.warn(
+        `[unsplash] search failed: ${response.status} ${response.statusText} ` +
+          `(rate limit remaining: ${response.headers.get("x-ratelimit-remaining") ?? "?"})`,
+      );
+      return null;
+    }
 
     const data = (await response.json()) as { results?: UnsplashPhoto[] };
     const photo = data.results?.[0];
@@ -57,7 +66,8 @@ export const findRecipeImage = async (query: string): Promise<RecipeImage | null
       imageCredit: credit,
       imageCreditUrl: `${profileUrl}?${UTM}`,
     };
-  } catch {
+  } catch (err) {
+    console.warn("[unsplash] request error:", err);
     return null;
   }
 };
